@@ -61,7 +61,8 @@ const post = ctx => {
         case 'session':
             return login(ctx).then(res => { ctx.body = res; });
         default:
-            return checkAuth(ctx).then(result => { ctx.body = result; });
+            // return checkAuth(ctx).then(result => { ctx.body = result; });
+            ctx.throw(404, 'Not Found!');
     }
 };
 const get = ctx => {
@@ -69,7 +70,8 @@ const get = ctx => {
         case 'token':
             return refreshToken(ctx).then(result => { ctx.body = result; });
         default:
-            return checkAuth(ctx).then(result => { ctx.body = result; });
+            // return checkAuth(ctx).then(result => { ctx.body = result; });
+            ctx.throw(404, 'Not Found!');
     }
 };
 export default { get, post };

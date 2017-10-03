@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 // 声明schema
 const UserSchema = mongoose.Schema({
-    username: String,
+    username: Number,
     password: String
 });
 // 根据schema生成model

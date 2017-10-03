@@ -11,7 +11,8 @@ const post = ctx => {
         case 'users':
             return register(ctx).then(res => { ctx.body = res; });
         default:
-            return register(ctx).then(res => { ctx.body = res; });
+            // return register(ctx).then(res => { ctx.body = res; });
+            ctx.throw(404, 'Not Found!');
     }
 };
 export default { post };

@@ -20,12 +20,10 @@ async function checkToken(ctx) {
     }
 }
 
-module.exports = function() {
-    return async(ctx, next) => {
-        const isTokenExist = await checkToken(ctx);
-        if (!isTokenExist) {
-            ctx.throw(401, 'Invalid token');
-        }
-        return next();
-    };
+export default async(ctx, next) => {
+    const isTokenExist = await checkToken(ctx);
+    if (!isTokenExist) {
+        ctx.throw(401, 'Invalid token');
+    }
+    await next();
 };

@@ -10,19 +10,21 @@ const findUserByUn = async username => {
     const user = await User.findOne({ username });
     return user;
 };
-
+// 创建token
 const createTonken = (payload, expiresIn) => {
     const token = jwt.sign(payload, publicKey, {
         expiresIn // 过期时间设置为60妙。那么decode这个token的时候得到的过期时间为 : 创建token的时间+设置的值
     });
     return token;
 };
+// 保存token在redis
 const saveToken = (accessToken, refreshToken, key) => {
     redis.set(key + 'a', accessToken);
     redis.expire(key + 'a', expire_access_token);
     redis.set(key + 'r', refreshToken);
     redis.expire(key + 'r', expire_refresh_token);
 };
+// 登录
 const login = async(username, password) => {
     const user = await findUserByUn(username);
     let res;
@@ -74,6 +76,7 @@ const register = async(username, password) => {
     }
     return res;
 };
+// 更新token
 const refreshToken = userId => {
     const payload = { userId };
     const accessToken = createTonken(payload, expire_access_token);

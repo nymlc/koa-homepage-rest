@@ -28,6 +28,7 @@
     "koa-jwt": "^3.2.2",
     "koa-router": "^7.2.1",
     "koa-static2": "^0.1.8",
+    "log4js": "^2.3.4",
     "module-alias": "^2.0.1",
     "mongoose": "^4.11.9",
     "nodemailer": "^4.0.1",

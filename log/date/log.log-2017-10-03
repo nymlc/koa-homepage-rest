@@ -1,0 +1,10 @@
+[2017-10-03 18:49:06.774] [ERROR] date - {"status":400,"body":"{\n\t\"username\": '123',\n\t\"password\": \"pzpz\"\n}"}
+[2017-10-03 18:50:02.587] [ERROR] date - {"message":"Cast to number failed for value \"pzpzpz\" at path \"username\" for model \"User\"","name":"CastError","stringValue":"\"pzpzpz\"","kind":"number","value":"pzpzpz","path":"username"}
+[2017-10-03 18:51:54.852] [ERROR] date - {"message":"Cast to number failed for value \"pzpzpz\" at path \"username\" for model \"User\"","name":"CastError","stringValue":"\"pzpzpz\"","kind":"number","value":"pzpzpz","path":"username"}
+[2017-10-03 18:53:14.535] [ERROR] date - {"message":"Cast to number failed for value \"pzpzpz\" at path \"username\" for model \"User\"","name":"CastError","stringValue":"\"pzpzpz\"","kind":"number","value":"pzpzpz","path":"username"}
+[2017-10-03 18:53:45.706] [ERROR] date - {}
+[2017-10-03 18:53:51.327] [ERROR] date - {}
+[2017-10-03 18:55:05.214] [ERROR] date - {}
+[2017-10-03 18:56:58.010] [ERROR] date - {"message":"Not Found!"}
+[2017-10-03 18:59:48.819] [ERROR] date - {"message":"Cast to number failed for value \"pzpzpz\" at path \"username\" for model \"User\"","name":"CastError","stringValue":"\"pzpzpz\"","kind":"number","value":"pzpzpz","path":"username"}
+[2017-10-03 19:00:26.370] [ERROR] date - {"message":"Cast to number failed for value \"pzpzpz\" at path \"username\" for model \"User\"","name":"CastError","stringValue":"\"pzpzpz\"","kind":"number","value":"pzpzpz","path":"username"}
