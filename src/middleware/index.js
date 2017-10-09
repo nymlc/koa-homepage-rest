@@ -9,13 +9,30 @@ import logger from 'middleware/logger';
 import checkRedisToken from 'middleware/check-redis-token';
 import errorCatch from 'middleware/error-catch';
 import jwt from 'koa-jwt';
+import url from 'url';
 
 const { System: SystemConfig } = config;
 const env = process.env.NODE_ENV || 'development'; // Current mode
 const koaStatic = KoaStatic2('assets', path.resolve(__dirname, '../assets')); // Static resource
+
 const koaJwt = jwt({ secret: SystemConfig.publicKey })
-    .unless({
-        path: [/^\/public|\/v1\/auth\/session|\/v1\/users|\/v1\/assets/]
+    .unless(ctx => {
+        const requestedUrl = url.parse(ctx.originalUrl || '', true);
+        const rule = [{
+            path: [/^\/v1\/auth\/session/],
+            method: ['POST']
+        }, {
+            path: [/^\/public|\/v1\/assets/]
+        }];
+        return rule.some(obj => obj.path.some(p => {
+            if ((typeof p === 'string' && p === requestedUrl.pathname) ||
+                (p instanceof RegExp && !!p.exec(requestedUrl.pathname))) {
+                if (!obj.method || (obj.method && obj.method.indexOf(ctx.method) > -1)) {
+                    return true;
+                }
+            }
+            return false;
+        }));
     });
 const body = KoaBody({
     multipart: true,

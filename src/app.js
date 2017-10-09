@@ -19,7 +19,7 @@ app.use(middlewares);
 app.on('error', (err, ctx) => {
     ctx.body = {
         code: -1,
-        msg: '系统错误',
+        msg: 'System error!',
         data: err.message
     };
 });
