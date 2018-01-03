@@ -11,11 +11,11 @@ import errorCatch from 'middleware/error-catch';
 import jwt from 'koa-jwt';
 import url from 'url';
 
-const { System: SystemConfig } = config;
+const { System: { publicKey } } = config;
 const env = process.env.NODE_ENV || 'development'; // Current mode
 const koaStatic = KoaStatic2('assets', path.resolve(__dirname, '../assets')); // Static resource
 
-const koaJwt = jwt({ secret: SystemConfig.publicKey })
+const koaJwt = jwt({ secret: publicKey })
     .unless(ctx => {
         const requestedUrl = url.parse(ctx.originalUrl || '', true);
         const rule = [{

@@ -1,6 +1,7 @@
 import redis from 'utils/db/redisdb';
 import jwt from 'jsonwebtoken';
 import config from 'config';
+import { getTokenKey } from 'utils/utils';
 
 const { System: { publicKey } } = config;
 async function checkToken(ctx) {
@@ -10,8 +11,9 @@ async function checkToken(ctx) {
         const decoded = jwt.decode(token, publicKey);
         const { userId } = decoded;
         let refreshToken;
+        const { refreshTokenKey } = getTokenKey(userId);
         // 获取内存中的refreshtoken
-        await redis.get(userId + 'r').then(result => {
+        await redis.get(refreshTokenKey).then(result => {
             refreshToken = result;
         });
         return refreshToken === token;

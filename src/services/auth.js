@@ -1,5 +1,5 @@
 import User from 'models/user';
-import { resJson } from 'utils/utils';
+import { resJson, getTokenKey } from 'utils/utils';
 import jwt from 'jsonwebtoken';
 import redis from 'utils/db/redisdb';
 import config from 'config';
@@ -19,10 +19,11 @@ const createTonken = (payload, expiresIn) => {
 };
 // 保存token在redis
 const saveToken = (accessToken, refreshToken, key) => {
-    redis.set(key + 'a', accessToken);
-    redis.expire(key + 'a', expire_access_token);
-    redis.set(key + 'r', refreshToken);
-    redis.expire(key + 'r', expire_refresh_token);
+    const { accessTokenKey, refreshTokenKey } = getTokenKey(key);
+    redis.set(accessTokenKey, accessToken);
+    redis.expire(accessTokenKey, expire_access_token);
+    redis.set(refreshTokenKey, refreshToken);
+    redis.expire(refreshTokenKey, expire_refresh_token);
 };
 // 登录
 const login = async(username, password) => {

@@ -1,12 +1,6 @@
-import {
-    SystemConfig
-} from 'config';
-import fs from 'fs';
-import path from 'path';
-import compose from 'koa-compose';
 import resCode from './res-code';
 
-export const resJson = (data, code = 0, msg = 'done') => {
+const resJson = (data, code = 0, msg = 'done') => {
     //     {
     //     data : { // 请求数据，对象或数组均可
     //         user_id: 123,
@@ -32,3 +26,14 @@ export const resJson = (data, code = 0, msg = 'done') => {
     return res;
 };
 
+const getTokenKey = userId => {
+    const accessTokenKey = `${userId}a`;
+    const refreshTokenKey = `${userId}r`;
+    return {
+        accessTokenKey, refreshTokenKey
+    };
+};
+
+export {
+    resJson, getTokenKey
+};

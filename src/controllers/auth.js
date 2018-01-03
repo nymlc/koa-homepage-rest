@@ -1,10 +1,9 @@
 import jwt from 'jsonwebtoken';
-import fs from 'fs';
-import path from 'path';
+import config from 'config';
 // 用于密码加密
 // import sha1 from 'sha1';
 import authService from 'services/auth';
-const publicKey = fs.readFileSync(path.join(__dirname, '../../publicKey.pub'));
+const { System: { publicKey } } = config;
 
 // 用户登录的时候返回token
 // let token = jwt.sign({
@@ -49,7 +48,7 @@ const login = async ctx => {
 const refreshToken = async ctx => {
     // 拿到token
     const token = ctx.header.authorization.split(' ')[1];
-    const decoded = jwt.decode(token, 'ln');
+    const decoded = jwt.decode(token, publicKey);
     const { userId } = decoded;
     const res = await authService.refreshToken(userId);
     return res;

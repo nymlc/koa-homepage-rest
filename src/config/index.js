@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 
-const publicKey = fs.readFileSync(path.join(__dirname, '../../publicKey.pub'));
+const publicKey = fs.readFileSync(path.join(__dirname, '../../publicKey.pub'), 'utf-8');
 // 系统配置
 const config = {
     System: {
@@ -12,8 +12,8 @@ const config = {
         http_server_host: 'www.nymlc.com', // http服务器地址,请勿添加"http://" （即前端调用使用的服务器地址，如果是APP请设置为 * ）
         http_server_port: '8080', // http服务器端口号
         System_country: 'zh-cn', // 所在国家的国家代码
-        expire_access_token: 60,
-        expire_refresh_token: 60 * 60,
+        expire_access_token: 60 * 30,
+        expire_refresh_token: 60 * 60 * 24 * 7,
         publicKey
     },
     DB: {
