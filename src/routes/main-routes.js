@@ -10,7 +10,7 @@ router
     .get('/public/get', (ctx, next) => {
         ctx.body = '禁止访问！';
     }) // 以/public开头则不用经过权限认证
-    .all('/upload', upload)
+    .all('/public/upload', upload.middleware, upload.callback)
     .get('/api/:name', api.Get)
     .post('/api/:name', api.Post)
     .put('/api/:name', api.Put)

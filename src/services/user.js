@@ -1,5 +1,5 @@
 import User from 'models/user';
-import { resJson } from 'utils/utils';
+import { resJson } from 'utils';
 
 // 根据用户名查找用户
 const findUserByUn = async username => {

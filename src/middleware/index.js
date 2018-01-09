@@ -13,16 +13,19 @@ import url from 'url';
 
 const { System: { publicKey } } = config;
 const env = process.env.NODE_ENV || 'development'; // Current mode
-const koaStatic = KoaStatic2('assets', path.resolve(__dirname, '../assets')); // Static resource
+const koaStatic = KoaStatic2('assets', path.resolve(__dirname, '../../assets')); // Static resource
 
 const koaJwt = jwt({ secret: publicKey })
     .unless(ctx => {
         const requestedUrl = url.parse(ctx.originalUrl || '', true);
         const rule = [{
-            path: [/^\/v1\/auth\/session/],
+            path: [/^\/v1\/auth\/session/], // sign in
             method: ['POST']
         }, {
-            path: [/^\/public|\/v1\/assets/]
+            path: [/^\/public/] // start with public
+        }, {
+            path: [/^\/assets\/uploads/], // 资源文件
+            method: ['GET']
         }];
         return rule.some(obj => obj.path.some(p => {
             if ((typeof p === 'string' && p === requestedUrl.pathname) ||
@@ -35,10 +38,10 @@ const koaJwt = jwt({ secret: publicKey })
         }));
     });
 const body = KoaBody({
-    multipart: true,
+    multipart: false,
     strict: false,
     formidable: {
-        uploadDir: path.join(__dirname, '../../assets/uploads/tmp')
+        uploadDir: path.join(__dirname, '../../assets/uploads/tmp')// 不用
     },
     jsonLimit: '10mb',
     formLimit: '10mb',

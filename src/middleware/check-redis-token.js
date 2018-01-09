@@ -1,7 +1,7 @@
 import redis from 'utils/db/redisdb';
 import jwt from 'jsonwebtoken';
 import config from 'config';
-import { getTokenKey } from 'utils/utils';
+import { getTokenKey } from 'utils';
 
 const { System: { publicKey } } = config;
 async function checkToken(ctx) {

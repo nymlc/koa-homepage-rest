@@ -14,7 +14,11 @@ const config = {
         System_country: 'zh-cn', // 所在国家的国家代码
         expire_access_token: 60 * 30,
         expire_refresh_token: 60 * 60 * 24 * 7,
-        publicKey
+        publicKey,
+        uploadsPath: {
+            absolutePath: path.join(__dirname, '../../assets/uploads/'),
+            relativePath: '/assets/uploads/'
+        }
     },
     DB: {
         sequelize: {

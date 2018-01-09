@@ -1,5 +1,5 @@
 import User from 'models/user';
-import { resJson, getTokenKey } from 'utils/utils';
+import { resJson, getTokenKey } from 'utils';
 import jwt from 'jsonwebtoken';
 import redis from 'utils/db/redisdb';
 import config from 'config';
