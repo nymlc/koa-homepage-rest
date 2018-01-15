@@ -1,5 +1,8 @@
 import resCode from './res-code';
+import jwt from 'jsonwebtoken';
+import config from 'config';
 
+const { System: { publicKey } } = config;
 const resJson = (data, code = 0, msg = 'done') => {
     //     {
     //     data : { // 请求数据，对象或数组均可
@@ -40,6 +43,27 @@ const getUUID = () => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c 
     return v.toString(16);
 });
 
+const getTokenFromCtx = ctx => {
+    let token;
+    // 获取请求中的token
+    try {
+        token = ctx.header.authorization.split(' ')[1];
+    } catch (error) {
+        // token = '';
+    }
+    return token;
+};
+
+const getUserIdFromCtx = ctx => {
+    // 获取请求中的token
+    const token = getTokenFromCtx(ctx);
+    let userId;
+    if (token != null) {
+        const decoded = jwt.decode(token, publicKey);
+        userId = decoded.userId;
+    }
+    return userId;
+};
 export {
-    resJson, getTokenKey, getUUID
+    resJson, getTokenKey, getUUID, getTokenFromCtx, getUserIdFromCtx
 };
