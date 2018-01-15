@@ -1,15 +1,10 @@
-import User from 'models/user';
+import { findUser } from './user';
 import { resJson, getTokenKey } from 'utils';
 import jwt from 'jsonwebtoken';
 import redis from 'utils/db/redisdb';
 import config from 'config';
 
 const { System: { expire_access_token, expire_refresh_token, publicKey } } = config;
-// 根据用户名查找用户
-const findUserByUn = async username => {
-    const user = await User.findOne({ username });
-    return user;
-};
 // 创建token
 const createTonken = (payload, expiresIn) => {
     const token = jwt.sign(payload, publicKey, {
@@ -27,7 +22,7 @@ const saveToken = (accessToken, refreshToken, key) => {
 };
 // 登录
 const login = async(username, password) => {
-    const user = await findUserByUn(username);
+    const user = await findUser({ username });
     let res;
     if (!user) {
         res = resJson({}, 202001);
@@ -38,7 +33,6 @@ const login = async(username, password) => {
             const accessToken = createTonken(payload, expire_access_token);
             const refreshToken = createTonken(payload, expire_refresh_token);
             saveToken(accessToken, refreshToken, userId);
-            // await user.save();
             res = resJson({
                 access_token: accessToken,
                 refresh_token: refreshToken
@@ -47,33 +41,6 @@ const login = async(username, password) => {
             res = resJson({
             }, 201005);
         }
-    }
-    return res;
-};
-
-// 注册
-const register = async(username, password) => {
-    const newUser = new User({
-        username,
-        password
-    });
-    // 将objectid转换为用户创建时间(可以不用)
-    // user.create_time = moment(objectIdToTimestamp(user._id)).format('YYYY-MM-DD HH:mm:ss');
-
-    const user = await findUserByUn(username);
-    let res;
-    if (user) {
-        res = resJson({}, 202002);
-    } else {
-        await new Promise((resolve, reject) => {
-            newUser.save(err => {
-                if (err) {
-                    reject(err);
-                }
-                resolve();
-            });
-        });
-        res = resJson({});
     }
     return res;
 };
@@ -89,4 +56,4 @@ const refreshToken = userId => {
     });
     return res;
 };
-export default { login, register, refreshToken };
+export default { login, refreshToken };
