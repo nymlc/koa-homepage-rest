@@ -1,19 +1,24 @@
+import config from 'config';
 import redis from 'utils/db/redisdb';
-import { getTokenKey, getTokenFromCtx, getUserIdFromCtx } from 'utils';
+import { getTokenKey, getTokenFromCtx, getUserIdFromCtx, isMatchAPI } from 'utils';
 
+const { API: { publicAPI, refreshTokenAPI } } = config;
 async function checkToken(ctx) {
     // 获取请求中的token
     const token = getTokenFromCtx(ctx);
     const userId = getUserIdFromCtx(ctx);
     const { accessTokenKey, refreshTokenKey } = getTokenKey(userId);
     // 若是刷新token
-    if (ctx.method === 'GET' && ctx.url === '/v1/auth/token') {
+    if (isMatchAPI(refreshTokenAPI, ctx)) {
         let refreshToken;
         // 获取内存中的refreshtoken
         await redis.get(refreshTokenKey).then(result => {
             refreshToken = result;
         });
         return refreshToken === token;
+    } else if (isMatchAPI(publicAPI, ctx)) {
+        // 若是开放api
+        return true;
     } else {
         let accessToken;
         // 获取内存中的accessToken

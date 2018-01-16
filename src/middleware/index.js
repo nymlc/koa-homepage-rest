@@ -10,32 +10,19 @@ import checkRedisToken from 'middleware/check-redis-token';
 import errorCatch from 'middleware/error-catch';
 import jwt from 'koa-jwt';
 import url from 'url';
+import { isMatchAPI } from 'utils';
 
-const { System: { publicKey } } = config;
+const { System: { publicKey }, API: { publicAPI } } = config;
 const env = process.env.NODE_ENV || 'development'; // Current mode
 const koaStatic = KoaStatic2('assets', path.resolve(__dirname, '../../assets')); // Static resource
 
 const koaJwt = jwt({ secret: publicKey })
     .unless(ctx => {
         const requestedUrl = url.parse(ctx.originalUrl || '', true);
-        const rule = [{
-            path: [/^\/v1\/auth\/session/], // sign in
-            method: ['POST']
-        }, {
-            path: [/^\/public/] // start with public
-        }, {
-            path: [/^\/assets\/uploads/], // 资源文件
-            method: ['GET']
-        }];
-        return rule.some(obj => obj.path.some(p => {
-            if ((typeof p === 'string' && p === requestedUrl.pathname) ||
-                (p instanceof RegExp && !!p.exec(requestedUrl.pathname))) {
-                if (!obj.method || (obj.method && obj.method.indexOf(ctx.method) > -1)) {
-                    return true;
-                }
-            }
-            return false;
-        }));
+        return isMatchAPI(publicAPI, {
+            url: requestedUrl.pathname,
+            method: ctx.method
+        });
     });
 const body = KoaBody({
     multipart: false,

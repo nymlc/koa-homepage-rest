@@ -64,6 +64,16 @@ const getUserIdFromCtx = ctx => {
     }
     return userId;
 };
+
+const isMatchAPI = (rule, option) => rule.some(obj => obj.path.some(p => {
+    if ((typeof p === 'string' && p === option.url) ||
+        (p instanceof RegExp && !!p.exec(option.url))) {
+        if (!obj.method || (obj.method && obj.method.indexOf(option.method) > -1)) {
+            return true;
+        }
+    }
+    return false;
+}));
 export {
-    resJson, getTokenKey, getUUID, getTokenFromCtx, getUserIdFromCtx
+    resJson, getTokenKey, getUUID, getTokenFromCtx, getUserIdFromCtx, isMatchAPI
 };

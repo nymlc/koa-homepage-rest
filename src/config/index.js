@@ -20,6 +20,24 @@ const config = {
             relativePath: '/assets/uploads/'
         }
     },
+    API: {
+        publicAPI: [{
+            path: [/^\/v1\/auth\/session/], // sign in
+            method: ['POST']
+        }, {
+            path: [/^\/v1\/users/], // Sign up
+            method: ['POST']
+        }, {
+            path: [/^\/public/] // start with public
+        }, {
+            path: [/^\/assets\/uploads/], // 资源文件
+            method: ['GET']
+        }],
+        refreshTokenAPI: [{
+            path: [/^\/v1\/auth\/token/], // 刷新token api
+            method: ['GET']
+        }]
+    },
     DB: {
         sequelize: {
             host: 'localhost', // 服务器地址

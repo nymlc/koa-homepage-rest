@@ -1,4 +1,4 @@
-import { findUser } from './user';
+import userServer from './user';
 import { resJson, getTokenKey } from 'utils';
 import jwt from 'jsonwebtoken';
 import redis from 'utils/db/redisdb';
@@ -22,7 +22,7 @@ const saveToken = (accessToken, refreshToken, key) => {
 };
 // 登录
 const login = async(username, password) => {
-    const user = await findUser({ username });
+    const user = await userServer.findUser({ username });
     let res;
     if (!user) {
         res = resJson({}, 202001);

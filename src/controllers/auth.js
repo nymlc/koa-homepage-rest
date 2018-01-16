@@ -3,12 +3,8 @@ import config from 'config';
 // 用于密码加密
 // import sha1 from 'sha1';
 import authService from 'services/auth';
+import { getUserIdFromCtx } from 'utils';
 const { System: { publicKey } } = config;
-
-// 用户登录的时候返回token
-// let token = jwt.sign({
-//   userInfo: userInfo // 你要保存到token的数据
-// }, publicKey, { expiresIn: '7d' })
 
 /**
  * 检查授权是否合法
@@ -46,10 +42,7 @@ const login = async ctx => {
     return res;
 };
 const refreshToken = async ctx => {
-    // 拿到token
-    const token = ctx.header.authorization.split(' ')[1];
-    const decoded = jwt.decode(token, publicKey);
-    const { userId } = decoded;
+    const userId = getUserIdFromCtx(ctx);
     const res = await authService.refreshToken(userId);
     return res;
 };
@@ -60,7 +53,6 @@ const post = ctx => {
         case 'session':
             return login(ctx).then(res => { ctx.body = res; });
         default:
-            // return checkAuth(ctx).then(result => { ctx.body = result; });
             ctx.throw(404, 'Not Found!');
     }
 };
@@ -69,7 +61,6 @@ const get = ctx => {
         case 'token':
             return refreshToken(ctx).then(result => { ctx.body = result; });
         default:
-            // return checkAuth(ctx).then(result => { ctx.body = result; });
             ctx.throw(404, 'Not Found!');
     }
 };
