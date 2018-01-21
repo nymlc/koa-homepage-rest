@@ -10,7 +10,7 @@ import checkRedisToken from 'middleware/check-redis-token';
 import errorCatch from 'middleware/error-catch';
 import jwt from 'koa-jwt';
 import url from 'url';
-import { isMatchAPI } from 'utils/res-utils';
+import { isMatchAPI } from 'utils/api/res-utils';
 
 const { System: { publicKey }, API: { publicAPI } } = config;
 const env = process.env.NODE_ENV || 'development'; // Current mode

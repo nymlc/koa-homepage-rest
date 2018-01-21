@@ -1,6 +1,6 @@
 import config from 'config';
 import redis from 'utils/db/redisdb';
-import { getTokenKey, getTokenFromCtx, getUserIdFromCtx, isMatchAPI } from 'utils/res-utils';
+import { getTokenKey, getTokenFromCtx, getUserIdFromCtx, isMatchAPI } from 'utils/api/res-utils';
 
 const { API: { publicAPI, refreshTokenAPI } } = config;
 async function checkToken(ctx) {

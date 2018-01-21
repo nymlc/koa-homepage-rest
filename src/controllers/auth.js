@@ -3,7 +3,7 @@ import config from 'config';
 // 用于密码加密
 // import sha1 from 'sha1';
 import authService from 'services/auth';
-import { getUserIdFromCtx } from 'utils/res-utils';
+import { getUserIdFromCtx } from 'utils/api/res-utils';
 const { System: { publicKey } } = config;
 
 /**

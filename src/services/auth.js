@@ -1,5 +1,5 @@
 import { UserDao } from 'models/user';
-import { resJson, getTokenKey } from 'utils/res-utils';
+import { resJson, getTokenKey } from 'utils/api/res-utils';
 import jwt from 'jsonwebtoken';
 import redis from 'utils/db/redisdb';
 import config from 'config';

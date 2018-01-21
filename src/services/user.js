@@ -1,5 +1,5 @@
 import { User, UserDao } from 'models/user';
-import { resJson } from 'utils/res-utils';
+import { resJson } from 'utils/api/res-utils';
 
 // 添加用户
 const addUser = async(username, password) => {
