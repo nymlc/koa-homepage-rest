@@ -1,6 +1,7 @@
 import multer from 'koa-multer';
 import config from 'config';
-import { resJson, getUUID } from 'utils';
+import { getUUID } from 'utils';
+import { resJson } from 'utils/res-utils';
 const { System: { uploadsPath: { absolutePath, relativePath } } } = config;
 const storage = multer.diskStorage({
     destination(req, file, cb) {

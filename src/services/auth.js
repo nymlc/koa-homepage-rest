@@ -1,5 +1,5 @@
-import userServer from './user';
-import { resJson, getTokenKey } from 'utils';
+import { UserDao } from 'models/user';
+import { resJson, getTokenKey } from 'utils/res-utils';
 import jwt from 'jsonwebtoken';
 import redis from 'utils/db/redisdb';
 import config from 'config';
@@ -22,7 +22,7 @@ const saveToken = (accessToken, refreshToken, key) => {
 };
 // 登录
 const login = async(username, password) => {
-    const user = await userServer.findUser({ username });
+    const user = await UserDao.findByUsername(username);
     let res;
     if (!user) {
         res = resJson({}, 202001);
