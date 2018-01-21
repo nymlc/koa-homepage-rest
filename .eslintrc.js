@@ -1,4 +1,5 @@
 module.exports = {
+    parser: "babel-eslint",
     root: true,
     parserOptions: {
         ecmaVersion: 8, //指定ECMAScript支持的版本，6为ES6，这里为了兼容async和await，设置为8
