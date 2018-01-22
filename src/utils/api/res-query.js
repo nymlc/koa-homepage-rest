@@ -1,5 +1,6 @@
 
 import _ from 'lodash';
+import mongoose from 'mongoose';
 const Parameters = {
     DEL: 'del',
     FIELDS: 'fields',
@@ -24,10 +25,74 @@ class QueryParams {
         result = result.replace(/&$/, '');
         return result ? `?${result}` : result;
     }
-    parse(source) {
+    toQuery(string) {
+        string = decodeURI(string);
+        const reg1 = /(?:\?|&|^)([^=]*)=([^&]*)(?=&|$)/g;
+        const reg2 = /^(?:\?|&|^)([^=]*)=([^&]*)(?=&|$)$/;
+        const rs = string.match(reg1);
+        const result = {};
+        rs.forEach(o => {
+            const _rs = o.match(reg2);
+            result[_rs[1]] = _rs[2];
+        });
+        return result;
+    }
+    isValidate(source, modelName) {
+        const { data, fields, sort, page, rows } = source;
+        if (fields && !Conditions.isValidateFieldName(fields.split(','), modelName)) {
+            return false;
+        }
+        if (sort && !Conditions.isValidateFieldName(sort.replace(/[+-]/g, '').split(','), modelName)) {
+            return false;
+        }
+        // 若不能转为数字
+        if ((page && isNaN(+page)) || (rows && isNaN(+rows))) {
+            return false;
+        }
+        if (data) {
+            let queryParam;
+            try {
+                queryParam = JSON.parse(data);
+            } catch (error) {
+                return false;
+            }
+            const set = new Set();
+            if ({}.toString.apply(queryParam) === '[object Array]') {
+                queryParam.forEach(o => {
+                    set.add(o.field);
+                });
+            } else {
+                const { and, or } = queryParam;
+                and && and.forEach(o => {
+                    set.add(o.field);
+                });
+                or && or.forEach(o => {
+                    set.add(o.field);
+                });
+            }
+            return Conditions.isValidateFieldName(Array.from(set), modelName);
+        }
+        return true;
+    }
+    static parseQueryString(queryString, modelName) {
+        const obj = new QueryParams();
+        const source = obj.toQuery(queryString);
+        if (obj.isValidate(source, modelName)) {
+            const option = obj.parseQuery(source);
+            return option;
+        }
+        return false;
+    }
+    parseQuery(source) {
         const { data, fields, sort, page, rows } = source;
         const condition = new Conditions();
-        const conditions = condition.toConditions(data);
+        let conditionObj;
+        try {
+            conditionObj = JSON.parse(data);
+        } catch (error) {
+            conditionObj = null;
+        }
+        const conditions = condition.toConditions(conditionObj);
         const _fields = {};
         fields && fields.split(',').forEach(filed => {
             _fields[filed] = 1;
@@ -35,15 +100,15 @@ class QueryParams {
         const _sort = {};
         sort && sort.split(',').forEach(s => {
             const rs = s.match(/^(\+|-)?(.*)/);
-            _sort[res[2]] = rs[1] === '-' ? -1 : 1;
+            _sort[rs[2]] = rs[1] === '-' ? -1 : 1;
         });
-        const skip = (page - 1) * rows;
+        const skip = (+page - 1) * +rows;
         return {
             conditions,
-            fileds: _fields,
+            fields: _fields,
             sort: _sort,
             skip,
-            limit: page
+            limit: +rows
         };
     }
 }
@@ -110,10 +175,17 @@ class Conditions {
                 [key]: orObj[key]
             });
         }
-        return _.merge(andObj, { $or: orArr });
+        if (orArr.length) {
+            return _.merge(andObj, { $or: orArr });
+        } else {
+            return andObj;
+        }
     }
     // 将queryparams转为conditions
     toConditions(queryParam) {
+        if (!queryParam) {
+            return null;
+        }
         if ({}.toString.apply(queryParam) === '[object Array]') {
             queryParam.forEach(o => {
                 this._toCondition(o);
@@ -126,8 +198,8 @@ class Conditions {
             or && or.forEach(o => {
                 this._toCondition(o, true);
             });
-            return this._assemblyConditions();
         }
+        return this._assemblyConditions();
     }
     // 去重condition
     _merge(arr) {
@@ -155,6 +227,17 @@ class Conditions {
             };
         }
         return JSON.stringify(result);
+    }
+    static isValidateFieldName(conditions, modelName) {
+        const fieldNames = Object.keys(mongoose.models[modelName].schema.paths);
+        for (const c of conditions) {
+            if (fieldNames.some(fieldName => c === fieldName)) {
+                continue;
+            } else {
+                return false;
+            }
+        }
+        return true;
     }
 }
 export {

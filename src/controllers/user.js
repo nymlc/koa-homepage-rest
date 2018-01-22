@@ -1,4 +1,5 @@
 import userService from 'services/user';
+import { UserModelName } from 'models/user';
 import { QueryParams } from 'utils/api/res-query';
 const register = async ctx => {
     // 拿到账号和密码
@@ -7,10 +8,14 @@ const register = async ctx => {
     return res;
 };
 const getAllUsers = async ctx => {
-    const { query } = ctx;
-    const queryParams = new QueryParams();
-    const option = queryParams.parse(query);
-    const res = await userService.getAllUsers(option);
+    const { querystring } = ctx;
+    let res;
+    const option = QueryParams.parseQueryString(querystring, UserModelName);
+    if (typeof option === 'boolean') {
+        res = '无效参数';
+    } else {
+        res = await userService.getUsers(option);
+    }
     return res;
 };
 const post = ctx => {
@@ -28,7 +33,8 @@ const get = ctx => {
             return getAllUsers(ctx).then(res => { ctx.body = res; });
         default:
             // return register(ctx).then(res => { ctx.body = res; });
-            ctx.throw(404, 'Not Found!');
+            // ctx.throw(404, 'Not Found!');
+            return getAllUsers(ctx).then(res => { ctx.body = res; });
     }
 };
 export default { get, post };

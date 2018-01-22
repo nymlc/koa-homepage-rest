@@ -18,6 +18,7 @@ router
     .get('/v1/auth/:action', auth.get)
     .post('/v1/auth/:action', auth.post)
     .get('/v1/auth/:action', auth.get)
-    .post('/v1/:action', user.post);
+    .post('/v1/:action', user.post)
+    .get('/public/v1/users', user.get);
 
 export default router;

@@ -1,6 +1,6 @@
 export default model => ({
-    async findAll({ conditions = null, fileds = null, limit, skip, sort }) {
-        const builder = model.find(conditions, fileds);
+    async findAll({ conditions = null, fields = null, limit, skip, sort }) {
+        const builder = model.find(conditions, fields);
 
         limit && builder.limit(limit);
         skip && builder.skip(skip);
@@ -9,8 +9,8 @@ export default model => ({
         const result = await builder.exec();
         return result;
     },
-    async findById(id, fileds) {
-        const result = await model.findById(id, fileds).exec();
+    async findById(id, fields) {
+        const result = await model.findById(id, fields).exec();
         return result;
     },
     async deleteById(id) {

@@ -4,5 +4,5 @@ export default async(ctx, next) => {
     const start = new Date();
     await next();
     const ms = new Date() - start;
-    logger.info(`${ctx.method} ${ctx.url} - ${ms}ms`);
+    logger.info(`${ctx.method} ${decodeURI(ctx.url)} - ${ms}ms`);
 };

@@ -7,10 +7,11 @@ const UserSchema = mongoose.Schema({
     password: String
 });
 // 根据schema生成model
-const User = mongoose.model('User', UserSchema);
+const UserModelName = 'User';
+const User = mongoose.model(UserModelName, UserSchema);
 const UserDao = Dao(User);
 UserDao.findByUsername = async username => {
     const user = await User.findOne({ username });
     return user;
 };
-export { User, UserDao };
+export { User, UserDao, UserModelName };

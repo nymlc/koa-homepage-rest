@@ -18,4 +18,10 @@ const addUser = async(username, password) => {
     }
     return res;
 };
-export default { addUser };
+// 获取用户
+const getUsers = async option => {
+    const users = await UserDao.findAll(option);
+    const res = resJson(users);
+    return res;
+};
+export default { addUser, getUsers };
